@@ -1,0 +1,17 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: to-do-app
+  namespace: test-argo
+  annotations:
+    openshift.io/host.generated: 'true'
+spec:
+  host: to-do-app-test-argo.apps.ocp.sbox.fusionglobal.tech
+  path: /
+  to:
+    kind: Service
+    name: to-do-app
+    weight: 100
+  port:
+    targetPort: 3000
+  wildcardPolicy: None
