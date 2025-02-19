@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: git@github.com:javi-mb/flow-argocd.git
     targetRevision: HEAD
-    path: k8s
+    path: templates
   destination: 
     server: https://kubernetes.default.svc
     namespace: my-app
