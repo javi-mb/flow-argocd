@@ -1,20 +1,58 @@
 "use client"
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+
+const API_URL = "http://to-do-server-my-app.apps.ocp.sbox.fusionglobal.tech/tasks";
 
 export default function TodoApp() {
-  const [tasks, setTasks] = useState<string[]>([]);
+  const [tasks, setTasks] = useState<{ id: number; task: string; created_at: string }[]>([]);
   const [task, setTask] = useState("");
 
-  const addTask = () => {
-    if (task.trim() !== "") {
-      setTasks([...tasks, task]);
-      setTask("");
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  const fetchTasks = async () => {
+    try {
+      const response = await fetch(API_URL);
+      const data = await response.json();
+      setTasks(data);
+    } catch (error) {
+      console.error("Error fetching tasks:", error);
     }
   };
 
-  const removeTask = (index: number) => {
-    setTasks(tasks.filter((_, i) => i !== index));
+  const addTask = async () => {
+    if (task.trim() !== "") {
+      try {
+        const response = await fetch(API_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ task }),
+        });
+        if (response.ok) {
+          fetchTasks();
+          setTask("");
+        }
+      } catch (error) {
+        console.error("Error adding task:", error);
+      }
+    }
+  };
+
+  const removeTask = async (id: number) => {
+    try {
+      const response = await fetch(`${API_URL}/${id}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        fetchTasks();
+      }
+    } catch (error) {
+      console.error("Error removing task:", error);
+    }
   };
 
   return (
@@ -36,11 +74,11 @@ export default function TodoApp() {
         </button>
       </div>
       <ul>
-        {tasks.map((t, index) => (
-          <li key={index} className="flex justify-between items-center p-2 border-b">
-            {t}
+        {tasks.map((t) => (
+          <li key={t.id} className="flex justify-between items-center p-2 border-b">
+            {t.task}
             <button
-              onClick={() => removeTask(index)}
+              onClick={() => removeTask(t.id)}
               className="text-red-500"
             >
               Eliminar
@@ -51,4 +89,3 @@ export default function TodoApp() {
     </div>
   );
 }
-
