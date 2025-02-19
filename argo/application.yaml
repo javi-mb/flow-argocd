@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: todo-app 
+  namespace: openshift-gitops
+spec:
+  project: default
+  source: 
+    repoURL: https://github.com/javi-mb/flow-argocd.git
+    targetRevision: HEAD
+    path: templates
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: test-argo
