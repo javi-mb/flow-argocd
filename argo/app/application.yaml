@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-app
+  namespace: openshift-gitops
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:javi-mb/flow-argocd.git
+    targetRevision: HEAD
+    path: templates/app
+  destination: 
+    server: https://kubernetes.default.svc
+    namespace: my-app
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    automated:
+      selfHeal: true
+      prune: true
