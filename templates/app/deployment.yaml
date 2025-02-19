@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: to-do-app
-          image: quay.io/martinezj/to-do-app:latest
+          image: quay.io/martinezj/to-do-app:1.0.0
           ports:
             - containerPort: 3000
           resources:
